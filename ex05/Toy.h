@@ -45,8 +45,8 @@ class Toy{
     ErrorType type;
     std::string _what;
     std::string _where;
-    std::string where(){ return _where; }
-    std::string what(){ return _what; }
+    std::string where() const{ return _where; }
+    std::string what() const{ return _what; }
   };
   Toy::Error getLastError();
 };
