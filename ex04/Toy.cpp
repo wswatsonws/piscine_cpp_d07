@@ -51,8 +51,9 @@ std::ostream &operator<<(std::ostream &f, const Toy &a){
   return f;
 }
 
-void operator<<(Toy &a, const std::string &str){
+Toy &operator<<(Toy &a, const std::string &str){
   a.setData(str);
+  return a;
 }
 
 Toy::Error Toy::getLastError(){

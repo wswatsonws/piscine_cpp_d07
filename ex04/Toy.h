@@ -47,6 +47,6 @@ class Toy{
 };
 
 std::ostream &operator<<(std::ostream &f, const Toy &a);
-void operator<<(Toy &a, const std::string &str);
+Toy &operator<<(Toy &a, const std::string &str);
 
 #endif /* Watson **/
