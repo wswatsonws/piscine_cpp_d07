@@ -1,19 +1,19 @@
-#ifndef _TOYSTORY_H_
-#define _TOYSTORY_H_
+#ifndef TOYSTORY_H
+#define TOYSTORY_H
 
-#include "Toy.h"
 #include <string>
 #include <fstream>
+#include "Toy.h"
 
-class ToyStory
-{
+typedef bool (Toy::*toy_speak)(std::string const message);
+
+class ToyStory {
 public:
-ToyStory();
-~ToyStory();
-
- static bool		tellMeAStory(const std::string &, Toy &, bool (Toy::*ptr1)(std::string const &), Toy &, bool (Toy::*ptr2)(std::string const &));
+	ToyStory();
+	~ToyStory();
+	static bool tellMeAStory(std::string const &filestr,
+				 Toy &char1, toy_speak speak1,
+				 Toy &char2, toy_speak speak2);
 };
 
-#endif /*Watson*/
-
-
+#endif

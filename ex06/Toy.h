@@ -1,56 +1,56 @@
-#ifndef _TOY_H_
-#define _TOY_H_
+#ifndef TOY_HPP
+#define TOY_HPP
 
+#include <string>
+#include <iostream>
 #include "Picture.h"
 
-class Toy
-{
- public:
-  enum ToyType {BASIC_TOY, ALIEN, BUZZ, WOODY};
+class Toy {
+public:
+	enum ToyType {
+		BASIC_TOY,
+		ALIEN,
+		BUZZ,
+		WOODY
+	};
+	class Error {
+	public:
+		enum ErrorType {
+			UNKNOWN,
+			PICTURE,
+			SPEAK
+		};
+		ErrorType type;
+		Error();
+		void setType(ErrorType type);
+		std::string what() const;
+		std::string where() const;
+	};
 
-  class Error
-  {
-  public:
-    enum ErrorType {UNKNOWN, PICTURE, SPEAK};
+protected:
+	ToyType type;
+	std::string name;
+	Picture picture;
+	Error error;
+	int spanish = 0;
+public:
+	Toy();
+	Toy(ToyType type, std::string const &name, std::string const &file);
+	Toy(Toy const &toy);
+	virtual ~Toy();
+	std::string const &getName() const;
+	int getType() const;
+	std::string const &getAscii() const;
+	void setName(std::string const &name);
+	bool setAscii(std::string const &ascii);
+	virtual bool speak(std::string const message);
+	virtual bool speak_es(std::string const message);
+	Toy::Error const &getLastError() const;
+	Toy &operator=(Toy const &toy);
+	Toy &operator<<(std::string const & ascii);
 
-    ErrorType	type;
-
-    Error();
-    ~Error();
-
-    void		setType(ErrorType);
-    std::string		what() const;
-    std::string		where() const;
-  };
-
- private:
-  ToyType		type;
-  std::string		name;
-  Picture		image;
-  Error			erreur;
-
- public:
-  Toy();
-  Toy(ToyType type, const std::string & name, const std::string & file);
-  Toy(const Toy &);
-  ~Toy();
-
-  int			getType() const;
-  std::string		getName() const;
-  std::string		getAscii() const;
-
-  void			setName(const std::string &name);
-  bool			setAscii(const std::string &file);
-
-  Toy			&operator=(Toy const &);
-
-  virtual bool		speak(const std::string &);
-  virtual bool		speak_es(const std::string &);
-
-  Toy			&operator<<(const std::string &);
-  Toy::Error		getLastError()const;
 };
 
-std::ostream		&operator<<(std::ostream &, const Toy &);
+std::ostream &operator<<(std::ostream & os, Toy const & toy);
 
-#endif /*Watson*/
+#endif

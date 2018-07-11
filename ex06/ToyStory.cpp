@@ -1,4 +1,4 @@
-#include <string.h>
+#include <cstring>
 #include "ToyStory.h"
 
 ToyStory::ToyStory()
@@ -9,73 +9,45 @@ ToyStory::~ToyStory()
 {
 }
 
-bool	ToyStory::tellMeAStory(const std::string &file_name, Toy &first, bool (Toy::*ptr1)(std::string const &str), Toy &second, bool (Toy::*ptr2)(std::string const &str))
+bool			ToyStory::tellMeAStory(std::string const &filestr,
+					       Toy &char1, toy_speak speak1,
+					       Toy &char2, toy_speak speak2)
 {
-  std::ifstream		file(file_name.c_str());
-
-  if (file.is_open())
-    {
-      if(first.getAscii() != "ERROR")
-	std::cout << first.getAscii() << std::endl;
-      if(second.getAscii() != "ERROR")
-	std::cout << second.getAscii() << std::endl;
-
-      bool		print = true;
-      std::string	ligne;
-      while (getline(file, ligne))
-	{
-	  if (strncmp("picture:", ligne.c_str(), 8) == 0)
-	    {
-	      ligne = ligne.substr(8, (strlen(ligne.c_str())));
-	      if (print == true)
-		{
-		  if (!(first.setAscii(ligne)))
-		    {
-		      Toy::Error e = first.getLastError();
-		      std::cout << e.where() << ": " << e.what() << std::endl;
-		      return false;
-		    }
-		  else
-		    std::cout << first.getAscii() << std::endl;
+	std::string	sentence;
+	size_t		index;
+	std::string	picture;
+	int		count = 0;
+	char		buffer[2048];
+	std::ifstream file(filestr.data());
+	std::cout << char1.getAscii() << "\n";
+	std::cout << char2.getAscii() << "\n";
+	if (file.is_open()) {
+		while (!file.eof()) {
+			memset(buffer, 0, 2048);
+			file.getline(buffer, 2048);
+			sentence = buffer;
+			if ((index = sentence.find("picture:")) == 0) {
+				picture = sentence.substr(8);
+				if (count % 2) {
+					if (!char1.setAscii(picture))
+						return false;
+					std::cout << char1.getAscii() << "\n";
+				} else {
+					if (!char2.setAscii(picture))
+						return false;
+					std::cout << char2.getAscii() << "\n";
+				}
+			} else {
+				if (count % 2) {
+					if (!(char1.*speak1)(sentence))
+						return false;
+				} else {
+					if (!(char2.*speak2)(sentence))
+						return false;
+				}
+			}
+			++count;
 		}
-	      else
-		{
-		  if (!(second.setAscii(ligne)))
-		    {
-		      Toy::Error e = second.getLastError();
-		      std::cout << e.where() << ": " << e.what() << std::endl;
-		      return false;
-		    }
-		  else
-		    std::cout << second.getAscii() << std::endl;
-		}
-	    }
-	  if (true)
-	    {
-	      if (print == true)
-		if ((first.*ptr1)(ligne) == false)
-		  {
-		    Toy::Error e = first.getLastError();
-		    std::cout << e.where() << ": " << e.what() << std::endl;
-		    return false;
-		  }
-	      if (print == false)
-		if ((second.*ptr2)(ligne) == false)
-		  {
-		    Toy::Error e = second.getLastError();
-		    std::cout << e.where() << ": " << e.what() << std::endl;
-		    return false;
-		  }
-	    }
-	  print = (print == false) ? true : false;
 	}
-      file.close();
-      return true;
-    }
-  else
-    {
-      std::cout << "Bad Story" << std::endl;
-      return false;
-    }
+	return true;
 }
-/*Watson*/

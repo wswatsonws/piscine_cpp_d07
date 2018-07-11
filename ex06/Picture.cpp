@@ -1,55 +1,37 @@
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <string.h>
+#include <sstream>
 #include "Picture.h"
 
 Picture::Picture()
+: data("")
 {
-  this->data = "";
 }
 
 Picture::Picture(const std::string &file)
 {
-  if (!(this->getPictureFromFile(file)))
-    this->data = "ERROR";
+	getPictureFromFile(file);
 }
 
-Picture::Picture(const Picture &src)
+Picture::Picture(Picture const &picture)
 {
-  this->data = src.data;
+	data = picture.data;
 }
 
-Picture		&Picture::operator=(Picture const &src)
-{
-  this->data = src.data;
-  return (*this);
+Picture::~Picture() {
+
 }
 
-Picture::~Picture()
+bool			Picture::getPictureFromFile(const std::string &file)
 {
-}
+	std::ifstream	fd;
 
-bool		Picture::getPictureFromFile(const std::string &file)
-{
-  std::ifstream		f(file.c_str());
-  bool			success = false;
-  char			c;
-
-  this->data.clear();
-  if (f.is_open())
-    {
-      while (f.good())
-	{
-	  c = f.get();
-	  if (f.good())
-	    this->data = this->data + c;
+	fd.open(file.c_str(), std::ios::in);
+	if (fd.is_open()) {
+		std::string line;
+		while (std::getline(fd, line))
+			data += (line + "\n");
+		fd.close();
+		return true;
 	}
-      f.close();
-      success = true;
-    }
-  if (!success)
-    this->data = "ERROR";
-  return (success);
+	data = "ERROR";
+	return false;
 }
-/*Watson*/
