@@ -1,21 +1,22 @@
 #include "Buzz.h"
 
-Buzz::Buzz(std::string const& name, std::string const& filename) :
-    Toy(BUZZ, name, filename)
-{}
-
-Buzz::~Buzz()
-{}
-
-bool Buzz::speak(std::string const& speech)
+Buzz::Buzz(const std::string & name) : Toy(Toy::BUZZ, name, "buzz.txt")
 {
-    std::cout << "BUZZ: ";
-    return Toy::speak(speech);
 }
 
-bool Buzz::speak_es(std::string const& speech)
+Buzz::Buzz(const std::string & name, const std::string & ascii) : Toy(Toy::BUZZ, name, ascii)
 {
-    _error.clear();
-    std::cout << "BUZZ: " << getName() << " senorita \"" << speech << "\" senorita" << std::endl;
-    return true;
 }
+
+bool		Buzz::speak(const std::string & src)
+{
+  std::cout << "BUZZ: " << this->getName() << " \"" << src << "\"" << std::endl;
+  return true;
+}
+
+bool		Buzz::speak_es(const std::string & src)
+{
+  std::cout << "BUZZ: " << this->getName() << " senorita \"" << src << "\" senorita" << std::endl;
+  return true;
+}
+/*Watson*/

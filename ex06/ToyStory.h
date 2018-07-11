@@ -1,16 +1,19 @@
-#ifndef TOYSTORY_H_
-#define TOYSTORY_H_
+#ifndef _TOYSTORY_H_
+#define _TOYSTORY_H_
 
-#include <fstream>
-#include <iostream>
-#include <string>
 #include "Toy.h"
+#include <string>
+#include <fstream>
 
 class ToyStory
 {
 public:
-    static void tellMeAStory(std::string const& filename, Toy& toy1, bool(Toy::*func1)(std::string const&), Toy& toy2, bool(Toy::*func2)(std::string const&));
-    static bool execute(Toy& toy, bool (Toy::*func)(std::string const& str), std::string const& str);
+ToyStory();
+~ToyStory();
+
+ static bool		tellMeAStory(const std::string &, Toy &, bool (Toy::*ptr1)(std::string const &), Toy &, bool (Toy::*ptr2)(std::string const &));
 };
 
-#endif /* Watson */
+#endif /*Watson*/
+
+

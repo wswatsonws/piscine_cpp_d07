@@ -1,109 +1,129 @@
 #include "Toy.h"
 
-Toy::Toy() :
-    _type(BASIC_TOY), _name("toy"), _picture(""), _error()
-{}
-
-Toy::Toy(Toy const& other) :
-    _type(other.getType()), _name(other.getName()), _picture(other._picture), _error()
-{}
-
-Toy::Toy(ToyType type, std::string const& name, std::string const& filename) :
-    _type(type), _name(name), _picture(filename), _error()
-{}
-
-Toy& Toy::operator=(Toy const& other)
+Toy::Toy(ToyType type, const std::string &name, const std::string &file)
 {
-    _type = other.getType();
-    _name = other.getName();
-    _picture = other._picture;
-    return *this;
+  this->type = type;
+  this->name = name;
+  this->image.getPictureFromFile(file);
 }
 
-Toy::ToyType Toy::getType() const
+Toy::Toy()
 {
-    return _type;
+  this->type = BASIC_TOY;
+  this->name = "toy";
+  this->image.data = "";
 }
 
-std::string const& Toy::getName() const
+Toy::Toy(const Toy &src)
 {
-    return _name;
+  this->type = src.type;
+  this->name = src.name;
+  this->image = src.image;
 }
 
-void Toy::setName(std::string const& name)
+Toy		&Toy::operator=(Toy const &src)
 {
-    _name = name;
+  this->type = src.type;
+  this->name = src.name;
+  this->image = src.image;
+  return (*this);
 }
 
-bool Toy::setAscii(std::string const& filename)
+Toy::~Toy()
 {
-    _error.clear();
-    if (!_picture.getPictureFromFile(filename))
+}
+
+int		Toy::getType() const
+{
+  return this->type;
+}
+
+std::string	Toy::getName() const
+{
+  return this->name;
+}
+
+std::string	Toy::getAscii() const
+{
+  return this->image.data;
+}
+
+void		Toy::setName(const std::string &name)
+{
+  this->name = name;
+}
+
+bool		Toy::setAscii(const std::string &file)
+{
+  if (!(this->image.getPictureFromFile(file)))
     {
-        _error.record(Error::PICTURE, "bad new illustration", "setAscii");
-        return false;
+      this->erreur.setType(Error::PICTURE);
+      return false;
     }
-    return true;
-
+  return true;
 }
 
-std::string const& Toy::getAscii() const
+bool		Toy::speak(const std::string & src)
 {
-    return _picture.data;
+  std::cout << this->getName() << " \"" << src << "\"" << std::endl;
+  return true;
 }
 
-bool Toy::speak(std::string const& speech)
+Toy		&Toy::operator<<(const std::string &src)
 {
-    std::cout << getName() << " \"" << speech << "\"" << std::endl;
-    return true;
+  this->image.data = src;
+  return (*this);
 }
 
-std::ostream& operator<<(std::ostream& stream, Toy const& toy)
+std::ostream	&operator<<(std::ostream &os, const Toy &src)
 {
-    stream << toy.getName() << std::endl << toy.getAscii() << std::endl;
-    return stream;
+  os << src.getName() << std::endl;
+  os << src.getAscii() << std::endl;
+  return os;
 }
 
-Toy::Error& Toy::getLastError()
+bool		Toy::speak_es(const std::string & src)
 {
-    return _error;
+  (void)src;
+  this->erreur.setType(Error::SPEAK);
+  return false;
 }
 
-Toy& Toy::operator<<(std::string const& file)
+void		Toy::Error::setType(ErrorType type)
 {
-    _picture.data = file;
-    return *this;
+  this->type = type;
 }
 
-bool Toy::speak_es(std::string const& file)
+Toy::Error::Error()
 {
-    (void)file;
-    _error.record(Error::SPEAK, "wrong mode", "speak_es");
-    return false;
+  this->type = UNKNOWN;
 }
 
-Toy::Error::Error() :
-    type(UNKNOWN), _what(""), _where("")
-{}
-
-std::string const& Toy::Error::what() const
+Toy::Error::~Error()
 {
-    return _what;
 }
 
-std::string const& Toy::Error::where() const
+Toy::Error	Toy::getLastError() const
 {
-    return _where;
+  return this->erreur;
 }
 
-void Toy::Error::clear()
+std::string	Toy::Error::what() const
 {
-    record(UNKNOWN, "", "");
+  if (type == PICTURE)
+    return "bad new illustration";
+  else if (type == SPEAK)
+    return "wrong mode";
+  else
+    return "";
 }
 
-void Toy::Error::record(Toy::Error::ErrorType ty, std::string const& what, std::string const& where)
+std::string	Toy::Error::where() const
 {
-    type = ty;
-    _what = what;
-    _where = where;
-}
+  if (type == PICTURE)
+    return "setAscii";
+  else if (type == SPEAK)
+    return "speak_es";
+  else
+    return "";
+}/*Watson*/

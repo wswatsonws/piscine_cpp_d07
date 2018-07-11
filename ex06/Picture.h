@@ -1,18 +1,21 @@
-#ifndef PICTURE_H_
-#define PICTURE_H_
+#ifndef _PICTURE_H_
+#define _PICTURE_H_
 
+#include <iostream>
 #include <string>
 
 class Picture
 {
-public:
-    Picture(std::string const& file = "");
-    Picture(Picture const& other);
-    virtual ~Picture();
-    Picture& operator=(Picture const& other);
+ public:
+  Picture(const std::string &file);
+  Picture();
+  Picture(const Picture &);
+  ~Picture();
 
-    bool getPictureFromFile(std::string const& file);
-    std::string data;
+  std::string		data;
+  bool			getPictureFromFile(const std::string &file);
+
+  Picture		&operator=(Picture const &);
 };
 
-#endif /* Watson */
+#endif /*Watson*/
