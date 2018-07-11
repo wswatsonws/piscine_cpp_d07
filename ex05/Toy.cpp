@@ -68,7 +68,8 @@ Toy::Error Toy::getLastError(){
     s.type = Toy::Error::SPEAK;
   }
   else{
-    s._where = "speak_es";
+   // s._where = "speak_es";
+    s._where = "";
     s.type = Toy::Error::UNKNOWN;
   }
   return s;
